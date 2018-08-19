@@ -1,0 +1,60 @@
+\documentclass[english]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{enumitem}
+
+\title{CS224n Assignment 1 resolution}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Softmax}
+\begin{enumerate}[label=\alph*)]
+\item
+$$ softmax(x+c) = \frac{e^{x+c}}{\sum_j e^{x_j+c}} = \frac{e^xe^c}{\sum_j\left[ e^{x_j}e^c\right]} =$$
+$$ = \frac{e^xe^c}{e^c\sum_je^{x_j}} = \frac{e^x}{\sum_je^{x_j}} = softmax(x) $$
+\end{enumerate}
+
+\section{Neural Network Basics}
+\begin{enumerate}[label=\alph*)]
+\item
+$$ f = 1+e^{-x} $$
+$$ \sigma = \frac{1}{1+e^{-x}} $$
+$$ e^{-x} = \frac{1}{\sigma} -1 $$
+$$ \frac{\delta \sigma}{\delta x} \frac{1}{1+e^{-x}} = \frac{\delta \sigma}{\delta f} \frac{1}{f} \cdot \frac{\delta f}{\delta x}\left[1+e^{-x}\right] = -\frac{1}{f^2}(-e^{-x}) = $$
+$$ = \frac{e^{-x}}{(1+e^{-x})^2} = e^{-x} \sigma^2 = \left(\frac{1}{\sigma} - 1\right)\sigma^2 = \sigma(1-\sigma)$$
+
+\item (assuming y is one-hot label vector with k-th dimension equal to 1 and $\delta_{ik}$ is a corresponding Kronecker's delta)
+$$ f = \sum_j e^{\Theta_j} \text{\ \ \ \ } g = \frac{e^{\Theta_k}}{f} $$
+$$ \frac{\delta CE}{\delta \Theta_{i}} - \log\left(\frac{e^{\Theta_k}}{\sum_j e^{\Theta_j}}\right) = - \frac{1}{g}\cdot \frac{\delta g}{\delta \Theta_i}g = $$
+$$ = - \frac{1}{g} \cdot \frac{\frac{\delta e^{\Theta_k}}{\delta \Theta_i} e^{\Theta_k} \cdot f - \frac{\delta f}{\delta \Theta_i} f \cdot e^{\Theta_k}}{f^2} = - \frac{f}{e^{\Theta_k}}\cdot \frac{\delta_{ik}e^{\Theta_k} \cdot f - e^{\Theta_i}e^{\Theta_k}}{f^2} = $$
+$$ = \frac{e^{\Theta_i} - \delta_{ik}f}{f} = \hat{y_i} - \delta_{ik}$$
+
+\item
+$$ z_1 = xW_1 + b_1 \textbf{\ \ \ \ } z_2 = hW_2+b_2 $$
+$$ \frac{\delta J}{\delta x} J = \frac{\delta CE}{\delta x} CE(y, \hat{y}) = (\hat{y} - y) \cdot \frac{\delta z_2}{\delta x} z_2 = (\hat{y} - y)\cdot W_2 \cdot \frac{\delta h}{\delta x} h = $$
+$$ = (\hat{y} - y)\cdot W_2 \cdot \sigma'(z_1) \cdot \frac{\delta z_1}{\delta x} z_1 = (\hat{y} - y)\cdot W_2\cdot \sigma'(z_1) \cdot W_1$$
+Written as backpropagation deltas:\\
+$$ \delta_3 = (\hat{y} - y) $$
+$$ \delta_2 = \delta_3\cdot \sigma'(z_1)$$
+
+\item
+Mind biases - there is one additional bias unit in input and hidden layer. So when it comes to connections the graph looks like:
+$$ D_x \cdot H + H \cdot D_y $$
+But w.r.t biases we got:
+$$ H_{out} = H_{in}+1 $$
+$$ D_x = D_x +1$$
+So the resolution is:
+$$ (D_x+1)\cdot H + (H+1) \cdot D_y$$
+\end{enumerate}
+
+\section{word2vec}
+\end{document}%
+
+
+
+
+
+
+
+
+
