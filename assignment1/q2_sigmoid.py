@@ -13,10 +13,10 @@ def sigmoid(x):
     Return:
     s -- sigmoid(x)
     """
-
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
+    
+    #1+e^{-x}
+    d = 1+np.exp(-x)
+    s = 1/d   
 
     return s
 
@@ -34,9 +34,9 @@ def sigmoid_grad(s):
     ds -- Your computed gradient.
     """
 
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
+    #\sigma' = \sigma(1-\sigma)
+    sig = sigmoid(s)
+    ds = s*(1-s)
 
     return ds
 
@@ -71,9 +71,13 @@ def test_sigmoid():
     your tests be graded.
     """
     print "Running your tests..."
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
+    x = np.array([[1, 2], [1, 2], [1, 2]])
+    f = sigmoid(x)
+    f_ans = np.array([
+        [0.73105858, 0.88079708],
+        [0.73105858, 0.88079708],
+        [0.73105858, 0.88079708]])
+    assert np.allclose(f, f_ans, rtol=1e-05, atol=1e-06)
 
 
 if __name__ == "__main__":
