@@ -39,14 +39,34 @@ def forward_backward_prop(X, labels, params, dimensions):
     b2 = np.reshape(params[ofs:ofs + Dy], (1, Dy))
 
     # Note: compute cost based on `sum` not `mean`.
-    ### YOUR CODE HERE: forward propagation
-    raise NotImplementedError
-    ### END YOUR CODE
+    
+    m = X.shape[0]
+    
+    #Forward propagation
+    #See schema from assignment for explaination
+    y = labels
+    a1 = X
+    z2 = a1.dot(W1) + b1
+    a2 = sigmoid(z2)
+    z3 = a2.dot(W2) + b2
+    a3 = softmax(z3)
+    h = a3
+    
+    cost = -np.sum(y*np.log(h))
 
-    ### YOUR CODE HERE: backward propagation
-    raise NotImplementedError
-    ### END YOUR CODE
+    #Backward propagation
+    #Check my deriverative theory for explaination of this code
+    d3 = (a3 - y)
+    d2 = d3.dot(W2.T)*sigmoid_grad(a2)
+    
+    #DeltaW_i = a_i \delta_{i+1}
+    gradW2 = a2.T.dot(d3)
+    gradW1 = a1.T.dot(d2)
 
+    #Deltab_i = sum_j d_{i+1}
+    gradb2 = d3.sum(axis=0)
+    gradb1 = d2.sum(axis=0)
+    
     ### Stack gradients (do not modify)
     grad = np.concatenate((gradW1.flatten(), gradb1.flatten(),
         gradW2.flatten(), gradb2.flatten()))
@@ -75,19 +95,5 @@ def sanity_check():
         forward_backward_prop(data, labels, params, dimensions), params)
 
 
-def your_sanity_checks():
-    """
-    Use this space add any additional sanity checks by running:
-        python q2_neural.py
-    This function will not be called by the autograder, nor will
-    your additional tests be graded.
-    """
-    print "Running your sanity checks..."
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
-
-
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
